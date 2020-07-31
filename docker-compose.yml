@@ -1,0 +1,37 @@
+version: '2'
+services:
+  influxdb:
+    image: influxdb:1.6.2-alpine
+    container_name: influxdb
+    ports:
+    - "8086:8086"
+    - "2003:2003"
+    volumes:
+    - ./conf:/etc/influxdb
+    - /data/influxdb:/var/lib/influxdb
+
+  grafana:
+    image: grafana/grafana:5.2.3
+    container_name: grafana
+    privileged: true
+    environment:
+      - GF_INSTALL_PLUGINS=alexanderzobnin-zabbix-app,grafana-piechart-panel
+    ports:
+    - "3000:3000"
+    volumes:
+    - ./conf:/etc/grafana
+    - /data/grafana:/var/lib/grafana
+    links:
+    - influxdb
+
+  prometheus:
+    image: quay.io/prometheus/prometheus
+    container_name: prometheus
+    ports:
+    - "9090:9090"
+    volumes:
+    - /usr/share/zoneinfo/America/Sao_Paulo:/etc/localtime
+    - ./conf:/etc/prometheus
+    links:
+    - grafana
+

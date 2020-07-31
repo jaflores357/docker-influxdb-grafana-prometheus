@@ -1,0 +1,8 @@
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: [
+        'prd-pay-logstash-01:9198', 
+        'prd-pay-logstash-02:9198', 
+        'prd-pay-kibana-01:9108'
+]
